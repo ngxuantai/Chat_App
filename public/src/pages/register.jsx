@@ -4,6 +4,7 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import logo from '../assets/logo.png';
+import backgroundGalaxy from '../assets/background-galaxy.png';
 import {createUser} from '../services/userApi';
 
 function Register() {
@@ -61,12 +62,14 @@ function Register() {
 
   return (
     <>
+      <Background />
       <FormContainer>
+        <div className="logo">
+          {/* <img src={logo} alt="logo" /> */}
+          <h1>Welcome!</h1>
+          <h2>To Chat App</h2>
+        </div>
         <form onSubmit={(event) => handleSubmit(event)}>
-          <div className="logo">
-            <img src={logo} alt="logo" />
-            <h1>Chat App</h1>
-          </div>
           <input
             autoComplete="off"
             type="text"
@@ -106,49 +109,86 @@ function Register() {
   );
 }
 
-const FormContainer = styled.div`
+const Background = styled.div`
   height: 100vh;
-  width: 100vw;
+  width: 100%;
+  background-image: url(${backgroundGalaxy});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
+const FormContainer = styled.div`
+  padding: 2rem 4rem;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  gap: 1rem;
+  gap: 6rem;
   align-items: center;
-  background-color: #08286c;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url(${backgroundGalaxy});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   .logo {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    flex-direction: column;
     img {
-      height: 5rem;
+      height: 16rem;
     }
-    h1 {
+    h1,
+    h2 {
       color: white;
       text-shadow: 0 0 0.5rem black;
-      text-transform: uppercase;
+      margin: 0px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 5rem;
+      text-shadow: 4px 5px 4px rgba(0, 0, 0, 0.8);
+    }
+    h2 {
+      font-size: 3rem;
     }
   }
   form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    background-color: black;
     padding: 3rem 5rem;
     border-radius: 2rem;
-    input {
+    position: relative;
+    z-index: 1;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background-color: transparent;
-      padding: 1rem;
-      border: 0.1rem solid #08286c;
-      border-radius: 0.5rem;
+      backdrop-filter: blur(8px);
+      z-index: -1; /* Đặt lớp nền mờ ở phía sau form */
+    }
+    input {
+      background-color: #212121;
       color: white;
+      padding: 10px;
+      border: 2px solid white;
+      border-radius: 5px;
       font-size: 1rem;
       &:focus {
-        outline: none;
-        border: 0.1rem solid #997af0;
+        color: white;
+        background-color: #212121;
+        outline-color: #997af0;
+        box-shadow: -3px -3px 15px #997af0;
+        transition: 0.1s;
+        transition-property: box-shadow;
       }
     }
     button {
-      background-color: #997af0;
+      background: linear-gradient(to right, #997af0, #08286c);
       padding: 1rem;
       border-radius: 0.5rem;
       border: none;
@@ -159,7 +199,7 @@ const FormContainer = styled.div`
       text-transform: uppercase;
       transition: 0.4s ease-in-out;
       &:hover {
-        background-color: #08286c;
+        box-shadow: -3px -3px 15px #997af0;
       }
     }
     span {
@@ -170,6 +210,9 @@ const FormContainer = styled.div`
         color: #997af0;
         text-decoration: none;
         font-weight: bold;
+        &:hover {
+          text-shadow: -3px -3px 15px #997af0;
+        }
       }
     }
   }
