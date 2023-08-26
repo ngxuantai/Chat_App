@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import logo from '../assets/logo.png';
 import backgroundGalaxy from '../assets/background-galaxy.png';
-import {createUser} from '../services/userApi';
+import {signupUser} from '../services/userApi';
 
 function Register() {
   const navigate = useNavigate();
@@ -24,6 +24,11 @@ function Register() {
     theme: 'dark',
   };
 
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleValidation = () => {
     const {username, email, password, confirmPassword} = values;
     if (username.length < 3) {
@@ -31,6 +36,9 @@ function Register() {
       return false;
     } else if (email === '') {
       toast.error('Email is required.', toastOptions);
+      return false;
+    } else if (!isValidEmail(email)) {
+      toast.error('Email is invalid.', toastOptions);
       return false;
     } else if (password !== confirmPassword) {
       toast.error('Password and confirm password do not match.', toastOptions);
@@ -46,7 +54,7 @@ function Register() {
     event.preventDefault();
     if (handleValidation()) {
       const {username, email, password} = values;
-      const {data} = await createUser({username, email, password});
+      const {data} = await signupUser({username, email, password});
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       } else {
@@ -65,7 +73,7 @@ function Register() {
       <Background />
       <FormContainer>
         <div className="logo">
-          {/* <img src={logo} alt="logo" /> */}
+          <img src={logo} alt="logo" />
           <h1>Welcome!</h1>
           <h2>To Chat App</h2>
         </div>
@@ -79,7 +87,6 @@ function Register() {
           />
           <input
             autoComplete="off"
-            type="email"
             name="email"
             placeholder="Email"
             onChange={(event) => handleChange(event)}
@@ -98,9 +105,9 @@ function Register() {
             placeholder="Confirm Password"
             onChange={(event) => handleChange(event)}
           />
-          <button type="submit">Create account</button>
+          <button type="submit">Sign up</button>
           <span>
-            Already have a account? <Link to="/login">Login</Link>
+            Have an account? <Link to="/login">Log in</Link>
           </span>
         </form>
       </FormContainer>
@@ -116,10 +123,11 @@ const Background = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  filter: blur(4px);
 `;
 
 const FormContainer = styled.div`
-  padding: 2rem 4rem;
+  padding: 3rem 5rem;
   display: flex;
   justify-content: center;
   gap: 6rem;
@@ -155,7 +163,7 @@ const FormContainer = styled.div`
   form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
     padding: 3rem 5rem;
     border-radius: 2rem;
     position: relative;
@@ -172,6 +180,7 @@ const FormContainer = styled.div`
       z-index: -1; /* Đặt lớp nền mờ ở phía sau form */
     }
     input {
+      width: 220px;
       background-color: #212121;
       color: white;
       padding: 10px;
@@ -196,14 +205,13 @@ const FormContainer = styled.div`
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      text-transform: uppercase;
       transition: 0.4s ease-in-out;
       &:hover {
         box-shadow: -3px -3px 15px #997af0;
       }
     }
     span {
-      color: white;
+      color: black;
       text-align: center;
       font-size: 1rem;
       a {
