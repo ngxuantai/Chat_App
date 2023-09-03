@@ -4,7 +4,6 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import logo from '../assets/logo.png';
-import backgroundGalaxy from '../assets/background-galaxy.png';
 import {signupUser} from '../services/userApi';
 
 function Register() {
@@ -70,12 +69,11 @@ function Register() {
 
   return (
     <>
-      <Background />
       <FormContainer>
         <div className="logo">
           <img src={logo} alt="logo" />
-          <h1>Welcome!</h1>
-          <h2>To Chat App</h2>
+          <h1>Chat App</h1>
+          {/* <h2>To Chat App</h2> */}
         </div>
         <form onSubmit={(event) => handleSubmit(event)}>
           <input
@@ -116,30 +114,14 @@ function Register() {
   );
 }
 
-const Background = styled.div`
-  height: 100vh;
-  width: 100%;
-  background-image: url(${backgroundGalaxy});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  filter: blur(4px);
-`;
-
 const FormContainer = styled.div`
-  padding: 3rem 5rem;
   display: flex;
   justify-content: center;
   gap: 6rem;
   align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-image: url(${backgroundGalaxy});
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f0f2f5;
   .logo {
     display: flex;
     align-items: center;
@@ -147,49 +129,30 @@ const FormContainer = styled.div`
     img {
       height: 16rem;
     }
-    h1,
-    h2 {
-      color: white;
-      text-shadow: 0 0 0.5rem black;
+    h1 {
+      background: -webkit-linear-gradient(#997af0, #08286c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin: 0px;
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 5rem;
-      text-shadow: 4px 5px 4px rgba(0, 0, 0, 0.8);
-    }
-    h2 {
-      font-size: 3rem;
+      font-size: 4rem;
     }
   }
   form {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    padding: 3rem 5rem;
-    border-radius: 2rem;
-    position: relative;
-    z-index: 1;
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: transparent;
-      backdrop-filter: blur(8px);
-      z-index: -1; /* Đặt lớp nền mờ ở phía sau form */
-    }
+    padding: 2rem 2rem;
+    border-radius: 0.75rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
     input {
       width: 220px;
-      background-color: #212121;
-      color: white;
       padding: 10px;
-      border: 2px solid white;
+      border: 1px solid #000;
       border-radius: 5px;
       font-size: 1rem;
       &:focus {
-        color: white;
-        background-color: #212121;
         outline-color: #997af0;
         box-shadow: -3px -3px 15px #997af0;
         transition: 0.1s;
@@ -198,7 +161,7 @@ const FormContainer = styled.div`
     }
     button {
       background: linear-gradient(to right, #997af0, #08286c);
-      padding: 1rem;
+      padding: 10px;
       border-radius: 0.5rem;
       border: none;
       color: white;
