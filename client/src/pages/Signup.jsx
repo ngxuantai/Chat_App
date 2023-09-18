@@ -4,14 +4,16 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import logo from '../assets/logo.png';
-import {loginUser} from '../services/userApi';
+import {signupUser} from '../services/userApi';
 
-function Login() {
+function Signup() {
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
     username: '',
+    email: '',
     password: '',
+    confirmPassword: '',
   });
   const toastOptions = {
     position: 'top-right',
@@ -21,10 +23,24 @@ function Login() {
     theme: 'dark',
   };
 
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleValidation = () => {
     const {username, email, password, confirmPassword} = values;
     if (username.length < 3) {
       toast.error('Username must be at least 3 characters.', toastOptions);
+      return false;
+    } else if (email === '') {
+      toast.error('Email is required.', toastOptions);
+      return false;
+    } else if (!isValidEmail(email)) {
+      toast.error('Email is invalid.', toastOptions);
+      return false;
+    } else if (password !== confirmPassword) {
+      toast.error('Password and confirm password do not match.', toastOptions);
       return false;
     } else if (password.length < 8) {
       toast.error('Password must be ay least 8 characters.', toastOptions);
@@ -36,13 +52,14 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (handleValidation()) {
-      const {username, password} = values;
-      const {data} = await loginUser({username, password});
+      const {username, email, password} = values;
+      const {data} = await signupUser({username, email, password});
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       } else {
         localStorage.setItem('token', data.token);
-        navigate('/');
+        localStorage.setItem('chatapp-user', JSON.stringify(data.user));
+        navigate('/setAvatar');
       }
     }
   };
@@ -58,6 +75,7 @@ function Login() {
         <div className="logo">
           <img src={logo} alt="logo" />
           <h1>Chat App</h1>
+          {/* <h2>To Chat App</h2> */}
         </div>
         <form onSubmit={(event) => handleSubmit(event)}>
           <input
@@ -69,14 +87,27 @@ function Login() {
           />
           <input
             autoComplete="off"
+            name="email"
+            placeholder="Email"
+            onChange={(event) => handleChange(event)}
+          />
+          <input
+            autoComplete="off"
             type="password"
             name="password"
             placeholder="Password"
             onChange={(event) => handleChange(event)}
           />
-          <button type="submit">Log in</button>
+          <input
+            autoComplete="off"
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            onChange={(event) => handleChange(event)}
+          />
+          <button type="submit">Sign up</button>
           <span>
-            Don't have an account? <Link to="/register">Sign up</Link>
+            Have an account? <Link to="/login">Log in</Link>
           </span>
         </form>
       </FormContainer>
@@ -160,4 +191,4 @@ const FormContainer = styled.div`
   }
 `;
 
-export default Login;
+export default Signup;

@@ -11,8 +11,17 @@ export const loginUser = async (user) => {
   return axios.post(api_url + '/user/login', user);
 };
 
-export const setAvatar = async (image) => {
-  return axios.post(api_url + '/user/setavatar', image, {
+export const setAvatar = async (avatarImage) => {
+  console.log(avatarImage);
+  return axios.post(api_url + '/user/setAvatar', avatarImage, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+};
+
+export const getAllUser = async () => {
+  return axios.get(api_url + '/user/getAll', {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
     },

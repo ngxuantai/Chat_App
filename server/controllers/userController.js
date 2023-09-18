@@ -1,7 +1,8 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-exports.Signup = async (req, res) => {
+exports.SignupUser = async (req, res) => {
   try {
     const {username, email, password} = req.body;
 
@@ -23,10 +24,14 @@ exports.Signup = async (req, res) => {
 
     const newUserWithoutPassword = {...newUser.toObject()};
     delete newUserWithoutPassword.password;
+
+    const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET);
+
     return res.json({
       msg: 'Signup successful',
       status: true,
       user: newUserWithoutPassword,
+      token: token,
     });
   } catch (error) {
     console.log(error);
@@ -44,10 +49,14 @@ exports.LoginUser = async (req, res) => {
       if (passwordMatch) {
         const UserWithoutPassword = {...user.toObject()};
         delete UserWithoutPassword.password;
+
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
+
         return res.json({
           msg: 'Login successful',
           status: true,
           user: UserWithoutPassword,
+          token: token,
         });
       } else {
         return res.json({
@@ -63,5 +72,45 @@ exports.LoginUser = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.SetAvatar = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log(userId);
+    const avatarImage = req.body.avatarImage;
+    console.log(avatarImage);
+    const userData = await User.findByIdAndUpdate(
+      userId,
+      {
+        isAvatarImageSet: true,
+        avatarImage,
+      },
+      {new: true}
+    );
+    return res.json({
+      msg: 'Set avatar successful',
+      status: 'true',
+      isSet: userData.isAvatarImageSet,
+      image: userData.avatarImage,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.GetAllUser = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const allUser = await User.find({_id: {$ne: userId}}).select([
+      'username',
+      'email',
+      'avatarImage',
+      '_id',
+    ]);
+    return res.json(allUser);
+  } catch (error) {
+    next(error);
   }
 };

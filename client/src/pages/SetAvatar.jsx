@@ -28,11 +28,16 @@ function SetAvater() {
       toast.error('Please select an avatar.', toastOptions);
       return;
     } else {
-      const data = await setAvatar(avatars[selectedAvatar]);
-      console.log(avatars[selectedAvatar]);
-      console.log(data);
-      if (data.data.isSet) {
-        navigate('/');
+      const user = await JSON.parse(localStorage.getItem('chatapp-user'));
+      const avatarImage = avatars[selectedAvatar];
+      if (avatarImage) {
+        const data = await setAvatar({avatarImage});
+        if (data.data.isSet) {
+          user.isAvatarImageSet = true;
+          user.avatarImage = data.image;
+          localStorage.setItem('chatapp-user', JSON.stringify(user));
+          navigate('/');
+        }
       }
     }
   };
@@ -43,12 +48,10 @@ function SetAvater() {
       const response = await axios.get(
         `${apiAvatar}/${Math.round(Math.random() * 1000)}`
       );
-      console.log('1');
       const buffer = Buffer.from(response.data);
       data.push(buffer.toString('base64'));
       if (i < 3) {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        console.log('2');
       }
     }
     setAvatars(data);

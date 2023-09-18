@@ -4,16 +4,14 @@ import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import logo from '../assets/logo.png';
-import {signupUser} from '../services/userApi';
+import {loginUser} from '../services/userApi';
 
-function Register() {
+function Login() {
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
     username: '',
-    email: '',
     password: '',
-    confirmPassword: '',
   });
   const toastOptions = {
     position: 'top-right',
@@ -23,24 +21,10 @@ function Register() {
     theme: 'dark',
   };
 
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handleValidation = () => {
     const {username, email, password, confirmPassword} = values;
     if (username.length < 3) {
       toast.error('Username must be at least 3 characters.', toastOptions);
-      return false;
-    } else if (email === '') {
-      toast.error('Email is required.', toastOptions);
-      return false;
-    } else if (!isValidEmail(email)) {
-      toast.error('Email is invalid.', toastOptions);
-      return false;
-    } else if (password !== confirmPassword) {
-      toast.error('Password and confirm password do not match.', toastOptions);
       return false;
     } else if (password.length < 8) {
       toast.error('Password must be ay least 8 characters.', toastOptions);
@@ -52,11 +36,13 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (handleValidation()) {
-      const {username, email, password} = values;
-      const {data} = await signupUser({username, email, password});
+      const {username, password} = values;
+      const {data} = await loginUser({username, password});
       if (data.status === false) {
         toast.error(data.msg, toastOptions);
       } else {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('chatapp-user', JSON.stringify(data.user));
         navigate('/');
       }
     }
@@ -73,7 +59,6 @@ function Register() {
         <div className="logo">
           <img src={logo} alt="logo" />
           <h1>Chat App</h1>
-          {/* <h2>To Chat App</h2> */}
         </div>
         <form onSubmit={(event) => handleSubmit(event)}>
           <input
@@ -85,27 +70,14 @@ function Register() {
           />
           <input
             autoComplete="off"
-            name="email"
-            placeholder="Email"
-            onChange={(event) => handleChange(event)}
-          />
-          <input
-            autoComplete="off"
             type="password"
             name="password"
             placeholder="Password"
             onChange={(event) => handleChange(event)}
           />
-          <input
-            autoComplete="off"
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            onChange={(event) => handleChange(event)}
-          />
-          <button type="submit">Sign up</button>
+          <button type="submit">Log in</button>
           <span>
-            Have an account? <Link to="/login">Log in</Link>
+            Don't have an account? <Link to="/signup">Sign up</Link>
           </span>
         </form>
       </FormContainer>
@@ -189,4 +161,4 @@ const FormContainer = styled.div`
   }
 `;
 
-export default Register;
+export default Login;
