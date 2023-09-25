@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
-import logo from '../assets/logo.png';
+import robot from '../assets/robot.gif';
 import {getAllUser} from '../services/userApi';
 import Contacts from '../components/Contacts';
 
@@ -11,12 +11,17 @@ function Chat() {
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [userName, setUserName] = useState(undefined);
+  const [currentChat, setCurrentChat] = useState(undefined);
   useEffect(() => {
     (async () => {
       if (!localStorage.getItem('chatapp-user')) {
         navigate('/login');
       } else {
         setCurrentUser(await JSON.parse(localStorage.getItem('chatapp-user')));
+        setUserName(
+          await JSON.parse(localStorage.getItem('chatapp-user')).username
+        );
       }
     })();
   }, []);
@@ -32,10 +37,30 @@ function Chat() {
       }
     })();
   }, [currentUser]);
+  const handleChatChange = (chat) => {
+    setCurrentChat(chat);
+  };
   return (
     <Container>
       <div className="container">
-        <Contacts contacts={contacts} currentUser={currentUser} />
+        <Contacts
+          contacts={contacts}
+          currentUser={currentUser}
+          changeChat={handleChatChange}
+        />
+        {currentChat === undefined ? (
+          <>
+            <div className="welcome">
+              <img src={robot} alt="robot-welcome" />
+              <h1>
+                Welcome, <span>{userName}!</span>
+              </h1>
+              <h3>Please select a chat</h3>
+            </div>
+          </>
+        ) : (
+          <></>
+        )}
       </div>
     </Container>
   );
@@ -47,17 +72,29 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
   align-items: center;
   background-color: #131324;
   .container {
     height: 85vh;
     width: 85vw;
-    background-color: #00000076;
+    background-color: #ffffff;
     display: grid;
     grid-template-columns: 25% 75%;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
       grid-template-columns: 35% 65%;
+    }
+  }
+  .welcome {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      height: 20rem;
+    }
+    h1,
+    h3 {
+      margin: 0;
     }
   }
 `;
