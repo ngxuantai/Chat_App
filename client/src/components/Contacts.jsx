@@ -65,6 +65,7 @@ export default function Contacts({contacts, currentUser, changeChat}) {
 }
 
 const Container = styled.div`
+  padding-top: 1rem;
   display: grid;
   grid-template-rows: 10% 75% 15%;
   overflow: hidden;
@@ -75,14 +76,16 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     gap: 1rem;
+    // height: 65px;
     img {
-      height: 2rem;
+      height: 3rem;
     }
     h3 {
       text-transform: uppercase;
     }
   }
   .contacts {
+    padding-top: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -99,20 +102,25 @@ const Container = styled.div`
       min-height: 5rem;
       width: 100%;
       cursor: pointer;
-      border-radius: 0.2rem;
+      // border-radius: 0.2rem;
       display: flex;
       gap: 0.8rem;
       align-items: center;
       transition: 0.5s ease-in-out;
       .avatar {
-        margin-left: 0.4rem;
+        margin-left: 1rem;
         img {
           height: 3rem;
         }
       }
+      .username {
+        h3 {
+          font-size: 1rem;
+        }
+      }
     }
     .selected {
-      background-color: #f5f5f5;
+      background-color: #d7d7d7;
     }
   }
   .current-user {
@@ -120,7 +128,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: 1rem;
     .avatar {
       img {
         height: 4rem;

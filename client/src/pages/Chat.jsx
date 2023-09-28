@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import robot from '../assets/robot.gif';
 import {getAllUser} from '../services/userApi';
 import Contacts from '../components/Contacts';
+import ChatContainer from '../components/ChatContainer';
 
 function Chat() {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ function Chat() {
             </div>
           </>
         ) : (
-          <></>
+          <ChatContainer currentChat={currentChat} />
         )}
       </div>
     </Container>
@@ -75,8 +76,8 @@ const Container = styled.div`
   align-items: center;
   background-color: #131324;
   .container {
-    height: 85vh;
-    width: 85vw;
+    height: 100vh;
+    width: 100vw;
     background-color: #ffffff;
     display: grid;
     grid-template-columns: 25% 75%;
