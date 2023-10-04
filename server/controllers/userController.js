@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-exports.SignupUser = async (req, res) => {
+exports.signupUser = async (req, res) => {
   try {
     const {username, email, password} = req.body;
 
@@ -38,7 +38,7 @@ exports.SignupUser = async (req, res) => {
   }
 };
 
-exports.LoginUser = async (req, res) => {
+exports.loginUser = async (req, res) => {
   try {
     const {username, password} = req.body;
     const user = await User.findOne({username});
@@ -75,7 +75,7 @@ exports.LoginUser = async (req, res) => {
   }
 };
 
-exports.SetAvatar = async (req, res) => {
+exports.setAvatar = async (req, res) => {
   try {
     const userId = req.user.id;
     console.log(userId);
@@ -100,7 +100,7 @@ exports.SetAvatar = async (req, res) => {
   }
 };
 
-exports.GetAllUser = async (req, res, next) => {
+exports.getAllUser = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const allUser = await User.find({_id: {$ne: userId}}).select([

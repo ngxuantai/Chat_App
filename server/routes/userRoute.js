@@ -1,10 +1,10 @@
 const router = require('express').Router();
-const UserControllers = require('../controllers/userController');
+const UserController = require('../controllers/userController');
 const verifyToken = require('../middleware/auth');
 
-router.post('/signup', UserControllers.SignupUser);
-router.post('/login', UserControllers.LoginUser);
-router.post('/setAvatar', verifyToken, UserControllers.SetAvatar);
-router.get('/getAll', verifyToken, UserControllers.GetAllUser);
+router.post('/signup', UserController.signupUser);
+router.post('/login', UserController.loginUser);
+router.post('/setAvatar', verifyToken, UserController.setAvatar);
+router.get('/getAll', verifyToken, UserController.getAllUser);
 
 module.exports = router;
