@@ -65,7 +65,6 @@ export default function Contacts({contacts, currentUser, changeChat}) {
 }
 
 const Container = styled.div`
-  padding-top: 1rem;
   display: grid;
   grid-template-rows: 10% 75% 15%;
   overflow: hidden;
@@ -85,7 +84,6 @@ const Container = styled.div`
     }
   }
   .contacts {
-    padding-top: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,19 +1,21 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {ToastContainer, toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import robot from '../assets/robot.gif';
 import {getAllUser} from '../services/userApi';
 import Contacts from '../components/Contacts';
 import ChatContainer from '../components/ChatContainer';
+import {io} from 'socket.io-client';
 
 function Chat() {
+  const socket = useRef();
+  const host = process.env.REACT_APP_HOST_CLIENT;
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [userName, setUserName] = useState(undefined);
   const [currentChat, setCurrentChat] = useState(undefined);
+
   useEffect(() => {
     (async () => {
       if (!localStorage.getItem('chatapp-user')) {
@@ -26,6 +28,14 @@ function Chat() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      socket.current = io(host);
+      socket.current.emit('add-user', currentUser._id);
+    }
+  }, [currentUser]);
+
   useEffect(() => {
     (async () => {
       if (currentUser) {
@@ -38,9 +48,11 @@ function Chat() {
       }
     })();
   }, [currentUser]);
+
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
+
   return (
     <Container>
       <div className="container">
@@ -60,7 +72,11 @@ function Chat() {
             </div>
           </>
         ) : (
-          <ChatContainer currentChat={currentChat} />
+          <ChatContainer
+            currentChat={currentChat}
+            currentUser={currentUser}
+            socket={socket}
+          />
         )}
       </div>
     </Container>

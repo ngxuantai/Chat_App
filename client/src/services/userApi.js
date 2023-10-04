@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// require('dotenv').config();
-const api_url = process.env.DB_API_URL || 'http://localhost:5000';
+const api_url = process.env.REACT_APP_DB_API_URL;
 
 export const signupUser = async (user) => {
   return axios.post(api_url + '/user/signup', user);
